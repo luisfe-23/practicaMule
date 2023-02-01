@@ -149,4 +149,4 @@ jobs:
         AUTHOR: "Luis Felipe Ruiz"
       run: |
         artifactName=$(ls *.jar | head -1)
-        mvn deploy --file check-in-api-app/pom.xml -DmuleDeploy -Dapi.id=${{ secrets.ANYPOINT_ID }} -Dap.client_id=${{ secrets.ANYPOINT_CLIENT_ID }} -Dap.client_secret=${{ secrets.ANYPOINT_CLIENT_SECRET }}
+        mvn deploy --file check-in-api-app/pom.xml -DmuleDeploy -Dapi.id=${ secrets.ANYPOINT_ID } -Dap.client_id=${ secrets.ANYPOINT_CLIENT_ID } -Dap.client_secret=${ secrets.ANYPOINT_CLIENT_SECRET }
