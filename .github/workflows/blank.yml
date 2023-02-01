@@ -113,3 +113,40 @@ jobs:
       run: |
         artifactName=$(ls *.jar | head -1)
         mvn deploy --file check-in-api-app/pom.xml
+        
+        
+# Steps for executing the deployment against Cloudhub2.0 Anypoint Platform
+  deploy:
+    needs: exchange
+    runs-on: ubuntu-latest
+    steps:    
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - uses: actions/download-artifact@v3
+      with:
+        name: artifacts
+
+    - uses: s4u/maven-settings-action@v2.6.0
+      with:
+        servers: |
+          [{
+              "id": "anypoint-exchange-v3",
+              "username": "${{ secrets.ANYPOINT_USERNAME }}",
+              "password": "${{ secrets.ANYPOINT_PASSWORD }}"
+          },
+          {
+                "id": "cloudhub-deploy",
+                "username": "${{ secrets.ANYPOINT_USERNAME }}",
+                "password": "${{ secrets.ANYPOINT_PASSWORD }}"
+          }]
+    - name: Deploy to CloudHub 2
+      env:
+        AUTHOR: "Luis Felipe Ruiz"
+      run: |
+        artifactName=$(ls *.jar | head -1)
+        mvn deploy --file check-in-api-app/pom.xml -DmuleDeploy -Dapi.id=18462303 -Dap.client_id=43035df0404044b290df9f0c4064351b -Dap.client_secret=c5e1065580284A93Ab24eaEf1F493E0d
